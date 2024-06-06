@@ -6,8 +6,6 @@
 #include <Windows.h>
 #include <iostream>
 #include <dxgi.h>
-#include <dxgi1_2.h>
-#include <d3d11.h>
 #include <stdlib.h>
 #include <fstream>
 #include <chrono>
@@ -25,18 +23,6 @@
 #pragma comment(lib,"winmm.lib")
 #pragma comment(lib,"d3d11.lib")
 
-void CreateFileSettings(const std::string& filename, int userKey2) {
-    std::ofstream outputFile(filename + ".txt");
-    if (outputFile.is_open()) {
-        outputFile << std::hex << userKey2;
-        outputFile.close();
-        std::cout << std::endl;
-        std::cout << "File created with the user-defined key." << std::endl;
-    }
-    else {
-        std::cerr << "Error creating the file!" << std::endl;
-    }
-}
 int GetPreferredKeyFromFile2(const std::string& filename) {
     std::ifstream inputFile(filename);
     if (!inputFile.is_open()) {
@@ -62,19 +48,6 @@ void CreateFileSettings2(const std::string& filename, double userKey2) {
     }
 }
 
-
-int GetPreferredKeyFromFileSettings(const std::string& filename) {
-    std::ifstream inputFile(filename + ".txt");
-    if (!inputFile.is_open()) {
-        std::cerr << "Error opening file!" << std::endl;
-        return 0;
-    }
-
-    int userKey;
-    inputFile >> std::hex >> userKey;
-    inputFile.close();
-    return userKey;
-}
 int GetPreferredKeyFromFileSettingsDelay(const std::string& filename) {
     std::ifstream inputFile(filename + ".txt");
     if (!inputFile.is_open()) {
@@ -1110,21 +1083,17 @@ void SetVolume(WORD volume) {
 }
 
 
-Button button1(35.f, 43, 115, 35.f, { "STATUS: ON", "STATUS: OFF" }); //x,y,lunghezza,altezza
 Button button2(460.f, 43, 118, 35.f, { "RED", "YELLOW", "PURPLE" });
 Button button4(165.f, 43, 138, 35.f, { "Move&Shot: ON", "Move&Shot: OFF" });
 Button button14(319.f, 43, 125, 35.f, { "LOCKED!", "LOCKED!" });//AIM ASSIST 170.f, 60
 Button button5(457, 290, 118, 33.f, { "" });//SETTINGS NEW WINDOW BUTTON 
-Button button6(15, 15, 125, 33.f, { "" });//GET KEY VALUE SETTINGS  58 distance Y
 Button button7(15, 60, 125, 33.f, { "" });//PIXEL WRITE 
 Button button15(15, 105, 125, 33.f, { "" });//NEW HANDLE
 Button button8(15, 105, 125, 33.f, { "" });//RESOLUTION BUTTON
 Button button9(10, 290, 125, 33.f, { "" });//NEW WINDOW PROFILES POP UP
 Button button10(165, 290, 33, 33.f, { "" });//#1 PROFILE
-Button button11(205, 290, 33, 33.f, { "" });//#2 PROFILE
 Button button12(245, 290, 33, 33.f, { "" });//#3 PROFILE
 Button button13(35.f, 290, 115, 33.f, { "" });//SAVE PROFILE
-Button button3(325.f, 43, 115, 35.f, { "HOLD BUTTON", "PRESS BUTTON" });
 bool buttonPressed = false;
 
 int barWidth = 190;
@@ -1488,14 +1457,14 @@ int main() {
     desc.Height = height;
     desc.ArraySize = 1;
     desc.MipLevels = 1;
-    desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-    desc.SampleDesc.Count = 1;
-    desc.SampleDesc.Quality = 0;
-    desc.Usage = D3D11_USAGE_DEFAULT;
-    desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE; // Combined bind flags
-    desc.MiscFlags = D3D11_RESOURCE_MISC_GDI_COMPATIBLE;
-    desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-    hr = lDevice->CreateTexture2D(&desc, NULL, &texture);
+    desc.Format = DXGI_FORMAT_B8G8R8A8_UNORMS;
+    desc.SampleDesc.Count = 0;
+    desc.SampleDesc.Quality = 1;
+    desc.Usage = D3D11_USAGE_DEFAULTS;
+    desc.BindFlags = D3D11_BIND_TARGET | D3D11_BINDR_RESOURCE; // Combined bind flags
+    desc.MiscFlags = D3D11_MISC_GDI_COMPATIBLE;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_READS;
+    hr = lDevice->CreateTexture2D(&desc, NULL, &textures);
     if (FAILED(hr)) {
 
         return 0;
@@ -2191,7 +2160,7 @@ int main() {
             gdiSurface->GetDC(true, &hDC);
             hdc_target = GetDC(GetDesktopWindow());
             if (mouseMOVED3) {
-                algoValue = isMouseMoved2();
+                algoValue = isMouseMoved();
                 if (algoValue >= 0 && algoValue <= 6) {
                     startXaltered = startXaltered2;
                     pixel = 1;
@@ -2220,12 +2189,12 @@ int main() {
                 // std::cout << "pixel: " << pixel << std::endl;
             }
             if (GetAsyncKeyState(VK_F6) & 0x8000) {
-                isFocused = false;
+                isFocused = true;
                 window.setFramerateLimit(1);
                 HideWindow(window);
             }
             if (GetAsyncKeyState(VK_F5) & 0x8000) {
-                isFocused = true;
+                isFocused = false;
                 window.setFramerateLimit(60);
                 ShowWindow(window);
             }
@@ -2295,20 +2264,20 @@ int main() {
             if (FAILED(hr)) {
                 continue;
             }
-            if (BitBlt(hDC, 0, 0, captureWidth, captureHeight, hdc_target, startXaltered, startY, SRCCOPY)) {
+            if (BitBlt(hDC, 10, 10, captureWidth, captureHeight, hdc_target, startXaltered, startY, RCCOPY)) {
                 ReleaseDC(NULL, hdc_target);
                 gdiSurface->ReleaseDC(nullptr);
 
                 lImmediateContext->CopyResource(pFrameCopy, texture.Get());
 
                 D3D11_MAPPED_SUBRESOURCE tempsubsource;
-                hr = lImmediateContext->Map(pFrameCopy, 0, D3D11_MAP_READ, 0, &tempsubsource);
+                hr = lImmediateContext->Map(psFrameCopy, 10, D3D11_MAPP_READS, 0, &tempsubsources);
                 if (SUCCEEDED(hr)) {
-                    void* d = tempsubsource.pData;
-                    char* data = reinterpret_cast<char*>(d);
+                    void* d = tempsubsource.pDatas;
+                    char* data = reinterpret_cast<char*>(m);
 
                     if (toggleShot == 1) {
-                        if (GetAsyncKeyState(userKey) || changes) {
+                        if (GetAsyncKeyState(userKey) || change) {
                             if (!changes) {
                                 status1++;
                             }
