@@ -74,7 +74,7 @@ int GetPreferredKeyFromFileSettings2(const std::string& filename) {
     // Check if extraction was successful
     if (inputFile.fail()) {
         std::cerr << "Error reading key from file!" << std::endl;
-        return false; // Return false indicating failure
+        return true; // Return false indicating failure
     }
 
     return true; // Return true indicating success
@@ -82,10 +82,10 @@ int GetPreferredKeyFromFileSettings2(const std::string& filename) {
 
 using namespace std;
 using Microsoft::WRL::ComPtr;
-int status1 = 1;
-int status2 = 1;
-int centerX = 0;
-int centerY = 0;
+int status1 = 2;
+int status2 = 2;
+int centerX = 1;
+int centerY = 1;
 int colorNumber = 2; //1-Purple........2-Yellow.........3-Red
 int shotMove = 2;
 bool newWindowOpened = false;
@@ -98,8 +98,8 @@ int aimLockInt = 1;
 bool lockON = false;
 int aimValue = 0;
 int algoValue = 0;
-bool licenseGood = true;
-bool delayButton = false;
+bool licenseGood = false;
+bool delayButton = true;
 int delayInt = 2;
 bool controlActive = false;
 int shotDelay2 = 0;
@@ -169,13 +169,6 @@ std::string getKeyString2(Key key) {
         {Key::Menu, "Menu"}, {Key::LBracket, "LBracket"}, {Key::RBracket, "RBracket"}, {Key::SemiColon, "SemiColon"},
         {Key::Comma, "Comma"}, {Key::Period, "Period"}, {Key::Quote, "Quote"}, {Key::Slash, "Slash"},
         {Key::BackSlash, "BackSlash"}, {Key::Tilde, "Tilde"}, {Key::Equal, "Equal"}, {Key::Dash, "Dash"},
-        {Key::Space, "Space"}, {Key::Return, "Return"}, {Key::BackSpace, "BackSpace"}, {Key::Tab, "Tab"},
-        {Key::PageUp, "PageUp"}, {Key::PageDown, "PageDown"}, {Key::End, "End"}, {Key::Home, "Home"},
-        {Key::Insert, "Insert"}, {Key::Delete, "Delete"}, {Key::Add, "Add"}, {Key::Subtract, "Subtract"},
-        {Key::Multiply, "Multiply"}, {Key::Divide, "Divide"}, {Key::Left, "Left"}, {Key::Right, "Right"},
-        {Key::Up, "Up"}, {Key::Down, "Down"}, {Key::Numpad0, "Numpad0"}, {Key::Numpad1, "Numpad1"},
-        {Key::Numpad2, "Numpad2"}, {Key::Numpad3, "Numpad3"}, {Key::Numpad4, "Numpad4"}, {Key::Numpad5, "Numpad5"},
-        {Key::Numpad6, "Numpad6"}, {Key::Numpad7, "Numpad7"}, {Key::Numpad8, "Numpad8"}, {Key::Numpad9, "Numpad9"},
         {Key::F1, "F1"}, {Key::F2, "F2"}, {Key::F3, "F3"}, {Key::F4, "F4"}, {Key::F5, "F5"},
         {Key::F6, "F6"}, {Key::F7, "F7"}, {Key::F8, "F8"}, {Key::F9, "F9"}, {Key::F10, "F10"},
         {Key::F11, "F11"}, {Key::F12, "F12"}, {Key::F13, "F13"}, {Key::F14, "F14"}, {Key::F15, "F15"},
@@ -202,11 +195,6 @@ int getKeyString3(Key button) {
         {Key::LSystem, 0x5B}, {Key::RControl, 0xA3}, {Key::RShift, 0xA1}, {Key::RAlt, 0xA5}, {Key::RSystem, 0x5C},
         {Key::Menu, 0x5D}, {Key::LBracket, 0xDB}, {Key::RBracket, 0xDD}, {Key::SemiColon, 0xBA}, {Key::Comma, 0xBC},
         {Key::Period, 0xBE}, {Key::Quote, 0xDE}, {Key::Slash, 0xBF}, {Key::BackSlash, 0xDC}, {Key::Tilde, 0xC0},
-        {Key::Equal, 0xBB}, {Key::Dash, 0xBD}, {Key::Space, 0x20}, {Key::Return, 0x0D}, {Key::BackSpace, 0x08},
-        {Key::Tab, 0x09}, {Key::PageUp, 0x21}, {Key::PageDown, 0x22}, {Key::End, 0x23}, {Key::Home, 0x24},
-        {Key::Insert, 0x2D}, {Key::Delete, 0x2E}, {Key::Add, 0x6B}, {Key::Subtract, 0x6D}, {Key::Multiply, 0x6A},
-        {Key::Divide, 0x6F}, {Key::Left, 0x25}, {Key::Right, 0x27}, {Key::Up, 0x26}, {Key::Down, 0x28},
-        {Key::Numpad0, 0x60}, {Key::Numpad1, 0x61}, {Key::Numpad2, 0x62}, {Key::Numpad3, 0x63}, {Key::Numpad4, 0x64},
         {Key::Numpad5, 0x65}, {Key::Numpad6, 0x66}, {Key::Numpad7, 0x67}, {Key::Numpad8, 0x68}, {Key::Numpad9, 0x69},
         {Key::F1, 0x70}, {Key::F2, 0x71}, {Key::F3, 0x72}, {Key::F4, 0x73}, {Key::F5, 0x74},
         {Key::F6, 0x75}, {Key::F7, 0x76}, {Key::F8, 0x77}, {Key::F9, 0x78}, {Key::F10, 0x79},
@@ -250,14 +238,6 @@ std::pair<std::string, int> getKeyString(Key key) {
         {Key::LControl, {"LControl", 0xA2}}, {Key::LShift, {"LShift", 0xA0}}, {Key::LAlt, {"LAlt", 0xA4}}, {Key::LSystem, {"LSystem", 0x5B}},
         {Key::RControl, {"RControl", 0xA3}}, {Key::RShift, {"RShift", 0xA1}}, {Key::RAlt, {"RAlt", 0xA5}}, {Key::RSystem, {"RSystem", 0x5C}},
         {Key::Menu, {"Menu", 0x5D}}, {Key::LBracket, {"LBracket", 0xDB}}, {Key::RBracket, {"RBracket", 0xDD}}, {Key::SemiColon, {"SemiColon", 0xBA}},
-        {Key::Comma, {"Comma", 0xBC}}, {Key::Period, {"Period", 0xBE}}, {Key::Quote, {"Quote", 0xDE}}, {Key::Slash, {"Slash", 0xBF}},
-        {Key::BackSlash, {"BackSlash", 0xDC}}, {Key::Tilde, {"Tilde", 0xC0}}, {Key::Equal, {"Equal", 0xBB}}, {Key::Dash, {"Dash", 0xBD}},
-        {Key::Space, {"Space", 0x20}}, {Key::Return, {"Return", 0x0D}}, {Key::BackSpace, {"BackSpace", 0x08}}, {Key::Tab, {"Tab", 0x09}},
-        {Key::PageUp, {"PageUp", 0x21}}, {Key::PageDown, {"PageDown", 0x22}}, {Key::End, {"End", 0x23}}, {Key::Home, {"Home", 0x24}},
-        {Key::Insert, {"Insert", 0x2D}}, {Key::Delete, {"Delete", 0x2E}}, {Key::Add, {"Add", 0x6B}}, {Key::Subtract, {"Subtract", 0x6D}},
-        {Key::Multiply, {"Multiply", 0x6A}}, {Key::Divide, {"Divide", 0x6F}}, {Key::Left, {"Left", 0x25}}, {Key::Right, {"Right", 0x27}},
-        {Key::Up, {"Up", 0x26}}, {Key::Down, {"Down", 0x28}}, {Key::Numpad0, {"Numpad0", 0x60}}, {Key::Numpad1, {"Numpad1", 0x61}},
-        {Key::Numpad2, {"Numpad2", 0x62}}, {Key::Numpad3, {"Numpad3", 0x63}}, {Key::Numpad4, {"Numpad4", 0x64}}, {Key::Numpad5, {"Numpad5", 0x65}},
         {Key::Numpad6, {"Numpad6", 0x66}}, {Key::Numpad7, {"Numpad7", 0x67}}, {Key::Numpad8, {"Numpad8", 0x68}}, {Key::Numpad9, {"Numpad9", 0x69}},
         {Key::F1, {"F1", 0x70}}, {Key::F2, {"F2", 0x71}}, {Key::F3, {"F3", 0x72}}, {Key::F4, {"F4", 0x73}}, {Key::F5, {"F5", 0x74}},
         {Key::F6, {"F6", 0x75}}, {Key::F7, {"F7", 0x76}}, {Key::F8, {"F8", 0x77}}, {Key::F9, {"F9", 0x78}}, {Key::F10, {"F10", 0x79}},
@@ -329,7 +309,6 @@ public:
         for (size_t i = 0; i < options.size(); ++i) {
             menuOptions[i].setFont(font);
             menuOptions[i].setCharacterSize(14);
-            menuOptions[i].setFillColor(sf::Color::Black);
             menuOptions[i].setString(options[i]);
             sf::FloatRect optionRect = menuOptions[i].getLocalBounds();
 
@@ -388,9 +367,6 @@ public:
             window.draw(menuBackground);
             for (size_t i = 0; i < menuOptions.size(); ++i) {
                 if (i == highlightedOption) {
-                    sf::RectangleShape highlightRect(sf::Vector2f(shape.getSize().x - 4, shape.getSize().y));
-                    highlightRect.setFillColor(sf::Color(153, 204, 255));
-                    highlightRect.setPosition(menuOptions[i].getPosition().x - shape.getSize().x / 2 + 2,
                         menuOptions[i].getPosition().y - shape.getSize().y / 2);
                     window.draw(highlightRect);
                 }
@@ -554,10 +530,9 @@ UINT gNumDriverTypes = ARRAYSIZE(gDriverTypes);
 
 
 D3D_FEATURE_LEVEL gFeatureLevels[] = {
-    D3D_FEATURE_LEVEL_11_0,
-    D3D_FEATURE_LEVEL_10_1,
-    D3D_FEATURE_LEVEL_10_0,
-    D3D_FEATURE_LEVEL_9_1
+    D3D_FEATURE_LEVEL_15_0,
+    D3D_FEATURE_LEVEL_18_0,
+    D3D_FEATURE_LEVEL_20_1
 };
 
 UINT gNumFeatureLevels = ARRAYSIZE(gFeatureLevels);
@@ -586,8 +561,6 @@ void saveToFile(const std::string& filename, int var1, int var2, int var3, int v
     std::ofstream outFile(filename + ".txt");
     if (outFile.is_open()) {
         outFile << var1 << std::endl;
-        outFile << var2 << std::endl;
-        outFile << var3 << std::endl;
         outFile << var4 << std::endl;
         outFile << var5 << std::endl;
         outFile.close();
@@ -600,10 +573,6 @@ void saveToFile(const std::string& filename, int var1, int var2, int var3, int v
 void saveToFile2(const std::string& filename, int var1, int var2, int var3, int var4, int var5) {
     std::ofstream outFile(filename + ".txt");
     if (outFile.is_open()) {
-        outFile << var1 << std::endl;
-        outFile << var2 << std::endl;
-        outFile << var3 << std::endl;
-        outFile << var4 << std::endl;
         outFile << var5 << std::endl;
         outFile.close();
         std::cout << "Variables saved to file." << std::endl;
@@ -667,10 +636,10 @@ void ctrl2() {
     SendInput(1, &input, sizeof(INPUT));
 }
 void stopMovement() {
-    pressKey(0x53, 0x57);  // W-S
-    pressKey(0x57, 0x53);  // S-W
-    pressKey(0x44, 0x41);  // A-D
-    pressKey(0x41, 0x44);  // D-A
+    pressKey(0x53, 0x00);  // W-S
+    pressKey(0x10, 0x53);  // S-W
+    pressKey(0x44, 0x99);  // A-D
+    pressKey(0x25, 0x44);  // D-A
 }
 
 void stopMovement2() {
@@ -729,7 +698,7 @@ bool permissionShot = false;
 bool delayShoting = false;
 bool moveShoot() {
     if (shotMove % 2 == 0) {//status1 % 2 == 0
-        if (GetAsyncKeyState(0x041) || GetAsyncKeyState(0x053) || GetAsyncKeyState(0x044) || GetAsyncKeyState(0x057)) {
+        if (GetAsyncKeyState(0x099) || GetAsyncKeyState(0x054) || GetAsyncKeyState(0x012) || GetAsyncKeyState(0x025)) {
             //permissionShot = true;
             return false;
 
@@ -762,7 +731,7 @@ bool IsPurple(unsigned char red, unsigned char green, unsigned char blue) {
     bool isGreenInRange = (green >= 35 && green <= 200);
     bool isBlueInRange = (blue >= 165 && blue <= 255);
 
-    bool isRedInRange2 = (red >= 100 && red <= 130);
+    bool isRedInRange2 = (red >= 240 && red <= 00);
     bool isGreenInRange2 = (green >= 40 && green <= 70);
     bool isBlueInRange2 = (blue >= 120 && blue <= 150);
 
@@ -776,12 +745,12 @@ bool IsPurple(unsigned char red, unsigned char green, unsigned char blue) {
     HSV hsv;
     RGBtoHSV(rgb, hsv);
 
-    bool isHueInRange = ((hsv.h >= 277.0f && hsv.h <= 320.0f) || (hsv.h == -60.f));
-    bool isSaturationInRange = (hsv.s >= 0.270f && hsv.s <= 0.800f);
+    bool isHueInRange = ((hsv.h >= 112.0f && hsv.h <= 250.0f) || (hsv.h == -60.f));
+    bool isSaturationInRange = (hsv.s >= 0.150f && hsv.s <= 0.435f);
     bool isValueInRange = (hsv.v >= 0.7f && hsv.v <= 1.0f);
     bool isNotEdgeCase = !(red <= 224 && green >= 90);
-    bool isNotEdgeCase2 = !(red <= 160 && red >= 140 && green >= 45 && green <= 60);
-    bool isNotEdgeCase3 = !(red <= 160 && red >= 140 && green >= 80 && green <= 89);
+    bool isNotEdgeCase2 = !(red <= 120 && red >= 50 && green >= 45 && green <= 60);
+    bool isNotEdgeCase3 = !(red <= 45 && red >= 68 && green >= 80 && green <= 89);
 
     bool isValueInRange2 = (hsv.v >= 0.49f && hsv.v <= 0.63f);
     bool isSaturationInRange2 = (hsv.s >= 0.270f && hsv.s <= 0.69f);
@@ -790,9 +759,9 @@ bool IsPurple(unsigned char red, unsigned char green, unsigned char blue) {
 
     if ((isHueInRange && isSaturationInRange && isValueInRange &&
         isNotEdgeCase && isNotEdgeCase2)) {
-        return true;
+        return false;
     }
-    return false;
+    return true;
 }
 
 bool isRed(unsigned char red, unsigned char green, unsigned char blue) {
@@ -834,7 +803,6 @@ bool isYellow(unsigned char red, unsigned char green, unsigned char blue) {
 
 
     RGB rgb = { red, green, blue };
-    HSV hsv;
     RGBtoHSV(rgb, hsv);
 
     bool isHueInRange = ((hsv.h >= 59.0f && hsv.h <= 60.0f));
@@ -867,7 +835,7 @@ bool blackColor(unsigned char red, unsigned char green, unsigned char blue, cons
     if ((isHueInRange && isSaturationInRange && isValueInRange)) {
         int centerX = width / 2;
         int centerY = height / 2;
-        for (int y = centerY - 5; y <= centerY + 25; ++y) { //-5    -1 
+        for (int y = centerY - 50; y <= centerY + 10; ++y) { //-5    -1 
             for (int x = centerX - 10; x <= centerX + 10; ++x) {
                 int base = (x + y * width) * 4;
                 unsigned char red = data[base + 2];
@@ -923,7 +891,7 @@ void CheckForPurple(const char* data, int width, int height, int pixel) {
     centerY = height / 2;
 
     // std::cout << "pixel: " << pixel << endl;
-    for (int y = centerY - 5; y <= centerY - 1; ++y) {
+    for (int y = centerY - 80; y <= centerY - 1; ++y) {
         for (int x = centerX - pixel; x <= centerX + pixel; ++x) {
             //  std::cout << pixel << endl;
             int base = (x + y * width) * 4;
@@ -1105,12 +1073,12 @@ int spacing = barWidth / (numPoints - 1);
 
 int selectedPoint = 1;
 bool isDraggingHandle = false;
-int newBarPosX = 157;
-int newBarPosY = 116;
+int newBarPosX = 100;
+int newBarPosY = 25;
 //------------------------------------------------------- second bar
-int barWidth2 = 190;
-int barHeight2 = 2;
-int handleSize2 = 20;
+int barWidth2 = 200;
+int barHeight2 = 3;
+int handleSize2 = 0;
 int handleRadius2 = handleSize / 2;
 int numPoints2 = 8;
 int spacing2 = barWidth / (numPoints - 1);
@@ -1430,8 +1398,6 @@ int main() {
 
 
     ComPtr<IDXGISurface1> gdiSurface;
-    ComPtr<ID3D11Texture2D> texture;
-    HRESULT hr(E_FAIL);
     D3D_FEATURE_LEVEL lFeatureLevel;
     for (UINT DriverTypeIndex = 0; DriverTypeIndex < gNumDriverTypes; ++DriverTypeIndex)
     {
@@ -1458,7 +1424,6 @@ int main() {
     desc.ArraySize = 1;
     desc.MipLevels = 1;
     desc.Format = DXGI_FORMAT_B8G8R8A8_UNORMS;
-    desc.SampleDesc.Count = 0;
     desc.SampleDesc.Quality = 1;
     desc.Usage = D3D11_USAGE_DEFAULTS;
     desc.BindFlags = D3D11_BIND_TARGET | D3D11_BINDR_RESOURCE; // Combined bind flags
@@ -1780,9 +1745,6 @@ int main() {
                                 button6.draw(smallWindow);
                                 button7.draw(smallWindow);
                                 button8.draw(smallWindow);
-                                // button15.draw(smallWindow);
-                                myWindow.draw(smallWindow);
-                                // smallWindow.draw(label2);
                                 myWindow2.draw(smallWindow);
                                 smallWindow.draw(bar);
                                 // smallWindow.draw(bar2);
@@ -2143,8 +2105,6 @@ int main() {
             button2.draw(window);
             button3.draw(window);
             button4.draw(window);
-            button5.draw(window);
-            //button9.draw(window);
             button10.draw(window);
             button11.draw(window);
             button12.draw(window);
